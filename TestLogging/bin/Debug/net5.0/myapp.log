@@ -1,0 +1,55 @@
+2022-07-07 23:36:11,226 [11] INFO TestLogging.Middleware.RequestResponseLoggingMiddleware - Request
+============================================
+Host: localhost:5001
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+TraceId: 2f57da02-6633-4a54-ae55-0027523f088c
+============================================
+2022-07-07 23:36:11,262 [11] INFO TestLogging.Middleware.RequestResponseLoggingMiddleware - Response
+============================================
+Host: 200
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+Status code: 200
+TraceId: 2f57da02-6633-4a54-ae55-0027523f088c
+============================================
+2022-07-07 23:39:29,610 [10] INFO
+ TestLogging.Middleware.RequestResponseLoggingMiddleware - Request
+============================================
+Host: localhost:5001
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+TraceId: 1cd71776-e276-488d-a9ab-10bd2e753aa3
+============================================
+2022-07-07 23:39:29,646 [10] INFO
+ TestLogging.Middleware.RequestResponseLoggingMiddleware - Response
+============================================
+Host: 200
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+Status code: 200
+TraceId: 1cd71776-e276-488d-a9ab-10bd2e753aa3
+============================================
+2022-07-07 23:42:29,138 [15] INFO
+ TestLogging.Middleware.RequestResponseLoggingMiddleware - Request
+============================================
+Host: localhost:5001
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+TraceId: 095e0b46-deab-4872-9ba1-0712af146565
+============================================
+2022-07-07 23:42:29,173 [15] INFO
+ TestLogging.Middleware.RequestResponseLoggingMiddleware - Response
+============================================
+Host: localhost:5001
+Path: /WeatherForecast
+Method: GET
+Protocol: HTTP/2
+Status code: 200
+TraceId: 095e0b46-deab-4872-9ba1-0712af146565
+============================================
