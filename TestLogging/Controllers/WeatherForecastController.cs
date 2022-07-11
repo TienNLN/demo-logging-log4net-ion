@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using TestLogging.Middleware;
+using TestLogging.Utils;
 
 namespace TestLogging.Controllers
 {
@@ -23,9 +25,21 @@ namespace TestLogging.Controllers
             _logger = logger;
         }
 
+        [HttpGet("error")]
+        public async Task<IActionResult> TestError()
+        {
+            LoggingUtil.Info("test message request 1");
+
+            await Task.Delay(5000);
+
+            return null;
+        }
+
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            LoggingUtil.Info("test message request 2");
+            
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
                 {

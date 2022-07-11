@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Net;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using log4net;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +11,9 @@ namespace TestLogging.Middleware
     public class RequestResponseLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILog _logger = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         
-        private static string TraceId;
+        private readonly ILog _requestResponseLogger = LogManager.GetLogger("RequestResponseLogger");
+        private readonly ILog _exceptionLogger = LogManager.GetLogger("ExceptionLogger");
 
         public RequestResponseLoggingMiddleware(RequestDelegate next)
         {
@@ -25,9 +27,11 @@ namespace TestLogging.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            TraceId = GenerateRequestTraceId();
+            var TraceId = GenerateRequestTraceId();
+
+            LogicalThreadContext.Properties["TraceId"] = TraceId;
             
-            _logger.Info("Request" + Environment.NewLine
+            _requestResponseLogger.Info("Request" + Environment.NewLine
                                              + "============================================" + Environment.NewLine
                                              + "Host: " + context.Request.Host + Environment.NewLine
                                              + "Path: " + context.Request.Path + Environment.NewLine
@@ -36,17 +40,43 @@ namespace TestLogging.Middleware
                                              + "TraceId: " + TraceId + Environment.NewLine
                                              + "============================================");
 
-            await _next.Invoke(context);
+            try
+            {
+                await _next.Invoke(context);
+            }
+            catch (Exception ex)
+            {
+                HandleExceptionAsync(ex, context, TraceId);
+            }
 
-            _logger.Info("Response" + Environment.NewLine
-                                    + "============================================" + Environment.NewLine
-                                    + "Host: " + context.Request.Host + Environment.NewLine
-                                    + "Path: " + context.Request.Path + Environment.NewLine
-                                    + "Method: " + context.Request.Method + Environment.NewLine
-                                    + "Protocol: " + context.Request.Protocol + Environment.NewLine
-                                    + "Status code: " + context.Response.StatusCode + Environment.NewLine
-                                    + "TraceId: " + TraceId + Environment.NewLine
-                                    + "============================================");
+            _requestResponseLogger.Info("Response" + Environment.NewLine
+                                                   + "============================================" + Environment.NewLine
+                                                   + "Host: " + context.Request.Host + Environment.NewLine
+                                                   + "Path: " + context.Request.Path + Environment.NewLine
+                                                   + "Method: " + context.Request.Method + Environment.NewLine
+                                                   + "Protocol: " + context.Request.Protocol + Environment.NewLine
+                                                   + "Status code: " + context.Response.StatusCode + Environment.NewLine
+                                                   + "TraceId: " + TraceId + Environment.NewLine
+                                                   + "============================================");
+        }
+        
+        private Task HandleExceptionAsync(Exception ex, HttpContext context, string TraceId)
+        {
+            var errorMessage = "Exception" + Environment.NewLine
+                                           + "============================================" + Environment.NewLine
+                                           + "Data: " + ex.Data + Environment.NewLine
+                                           + "InnerException: " + ex.InnerException + Environment.NewLine
+                                           + "StackTrace: " + ex.StackTrace + Environment.NewLine
+                                           + "Source: " + ex.Source + Environment.NewLine
+                                           + "HelpLink: " + ex.HelpLink + Environment.NewLine
+                                           + "TraceId: " + TraceId + Environment.NewLine
+                                           + "============================================";
+            
+            _exceptionLogger.Error(errorMessage);
+            
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            return context.Response.WriteAsync(errorMessage);
         }
     }
 }

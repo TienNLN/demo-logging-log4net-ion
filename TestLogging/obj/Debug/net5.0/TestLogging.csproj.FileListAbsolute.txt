@@ -41,3 +41,6 @@ E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\runtimes\win\lib\
 E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\app.config
 E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\Log4Net.config
 E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\TestLogging.dll.config
+E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\Elmah.Io.AspNetCore.dll
+E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\Elmah.Io.Client.dll
+E:\FPT Software - ADG\TestLogging\TestLogging\bin\Debug\net5.0\Newtonsoft.Json.dll
